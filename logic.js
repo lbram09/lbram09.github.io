@@ -158,7 +158,7 @@ export const calculateScore = (pwrd) => {
     if (upper && lower && digit && symbol) {
         // If the password includes all types of characters, increment the score by 10
         score += 10;
-    } else if ((upper && lower && !digit && !symbol) || (digit && !upper && !lower && !symbol) || (symbol && !upper && !lower && !digit)) {
+    } else if (((upper || lower) && !digit && !symbol) || (digit && !upper && !lower && !symbol) || (symbol && !upper && !lower && !digit)) {
         // If one of the following evaluates to true, decrement the score by 5:
         // - The password only contains uppercase and lowercase letters
         // - The password only contains digits
