@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Password checker and generator</title>
+    </head>
+    <body>
+        <div id="titleContainer">
+            <h1>Password checker and generator</h1>
+        </div>
+        <div id="checkerContainer">
+            <h2>Password checker</h2>
+            <form id="checkerForm">
+                <fieldset>
+                    <legend>Please enter the password you would like to check in the field below:</legend>
+                    <label for="pwrdInput">
+                        Password:
+                        <input name="pwrd" id="pwrdInput" type="password" size="24" required />
+                    </label>
+                </fieldset>
+                <button type="submit">Submit</button>
+            </form>
+            <ul>
+                <li>
+                    Score:
+                    <span id="checkedScore"></span>
+                </li>
+                <li>
+                    Strength:
+                    <span id="checkedStrength"></span>
+                </li>
+            </ul>
+        </div>
+        <div id="generateContainer">
+            <h2>Password generator</h2>
+            <button id="generateButton">Generate</button>
+            <p>Generated password:</p>
+            <ul>
+                <li>
+                    Password:
+                    <span id="generatedPwrd"></span>
+                </li>
+                <li>
+                    Score:
+                    <span id="generatedScore"></span>
+                </li>
+                <li>
+                    Strength:
+                    <span id="generatedStrength"></span>
+                </li>
+            </ul>
+        </div>
+        <script src="web.js" type="module"></script>
+    </body>
+</html>
