@@ -33,6 +33,7 @@ const dogs = ["Annie the Afgan Hound",
 
 
 class Dog {
+    // Dog class
     #name;
     #exercise;
     #intel;
@@ -40,6 +41,7 @@ class Dog {
     #drool;
 
     constructor(name, exercise, intel, friend, drool) {
+        // Dog constructor, with validation for each parameter
         typeof name === "string" ? this.#name = name : undefined;
         typeof exercise === "number" && exercise >= 1 && exercise <= 5 ? this.#exercise = exercise : undefined;
         typeof intel === "number" && intel >= 1 && intel <= 100 ? this.#intel = intel : undefined;
@@ -51,6 +53,8 @@ class Dog {
         return `Name: ${this.#name}\nExercise: ${this.#exercise}\nIntelligence: ${this.#intel}\nFriendliness: ${this.#friend}\nDrool: ${this.#drool}`;
     }
 
+
+    // GETTERS AND SETTERS
     get name() {
         return this.#name;
     }
@@ -72,6 +76,7 @@ class Dog {
     }
 
     getCategory(category) {
+        // Function which returns the value of the specified category for that dog instance
         switch (category) {
             case "exercise":
                 return this.#exercise;
@@ -106,16 +111,18 @@ const shuffle = (arr) => {
 
 
 const play = async (noOfDogs, dogNames) => {
+    // Play the game
     let dogs = [];
     dogNames.splice(-1, 30 - noOfDogs);
     dogNames.forEach(name => dogs.push(new Dog(name, randInt(1, 5), randInt(1, 100), randInt(1, 10), randInt(1, 10))));
-    dogs = shuffle(dogs);
+    dogs = shuffle(dogs); // Add the correct number of dogs to the deck, create dogs for each name, and shuffle the deck
     const mp = Math.floor(noOfDogs / 2);
     const playerDogs = dogs.slice(0, mp);
-    const computerDogs = dogs.slice(mp, noOfDogs);
+    const computerDogs = dogs.slice(mp, noOfDogs); // Split the deck in half for the player and computer
     let playerWins = true;
 
     while (playerDogs.length > 0 && computerDogs.length > 0) {
+        // Main loop whilst both players have cards
         const playerCurrent = playerDogs[0];
         const computerCurrent = computerDogs[0];
         let category;
@@ -125,8 +132,9 @@ const play = async (noOfDogs, dogNames) => {
         document.querySelector("#playerCardExercise").innerText = playerCurrent.exercise;
         document.querySelector("#playerCardIntel").innerText = playerCurrent.intel;
         document.querySelector("#playerCardFriend").innerText = playerCurrent.friend;
-        document.querySelector("#playerCardDrool").innerText = playerCurrent.drool;
+        document.querySelector("#playerCardDrool").innerText = playerCurrent.drool; // Display the player's current card
         if (playerWins) {
+            // If the player won the last round, let them choose the category to compare cards with
             // computerCardContainer.hidden = true;
             category = await new Promise(res => {
                 document.querySelector("#categorySelectForm").addEventListener("submit", e => {
@@ -135,6 +143,7 @@ const play = async (noOfDogs, dogNames) => {
                 }, { once: true });
             });
         } else {
+            // If the computer won the last round, it chooses the category to compare cards with randomly
             category = randChoice(CATEGORIES);
             document.querySelector("#computerCompareCategory").innerText = category;
         }
@@ -142,24 +151,28 @@ const play = async (noOfDogs, dogNames) => {
         document.querySelector("#computerCardExercise").innerText = computerCurrent.exercise;
         document.querySelector("#computerCardIntel").innerText = computerCurrent.intel;
         document.querySelector("#computerCardFriend").innerText = computerCurrent.friend;
-        document.querySelector("#computerCardDrool").innerText = computerCurrent.drool;
+        document.querySelector("#computerCardDrool").innerText = computerCurrent.drool; // Display the computer's current card
         // computerCardContainer.hidden = false;
         playerWins = true;
         if (category !== "drool") {
             if (computerCurrent.getCategory(category) > playerCurrent.getCategory(category)) {
+                // If the category is not drool, the higher value wins
                 playerWins = false;
             }
         } else {
             if (computerCurrent.getCategory(category) < playerCurrent.getCategory(category)) {
+                // If the category is drool, the lower value wins
                 playerWins = false;
             }
         }
         playerDogs.shift();
-        computerDogs.shift();
+        computerDogs.shift(); // Remove the top card from each player's deck
         if (playerWins) {
+            // If the player wins, display this to the user and add both cards to the bottom of the player's deck
             document.querySelector("#roundWinner").innerText = "player";
             playerDogs.push(playerCurrent, computerCurrent);
         } else {
+            // If the computer wins, display this to the user and add both cards to the bottom of the computer's deck
             document.querySelector("#roundWinner").innerText = "computer";
             computerDogs.push(playerCurrent, computerCurrent);
         }
@@ -168,10 +181,11 @@ const play = async (noOfDogs, dogNames) => {
                 e.preventDefault();
                 res();
             }, { once: true });
-        });
+        }); // Wait for the user to click the button to move on to the next round
     }
 
     if (playerDogs.length > 0) {
+        // If the player has cards left, they win the game, otherwise the computer wins
         document.querySelector("#gameWinner").innerText = "player";
     } else {
         document.querySelector("#gameWinner").innerText = "computer";
@@ -181,8 +195,9 @@ const play = async (noOfDogs, dogNames) => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Wait for the DOM to load before running any code which interacts with it
     const gameContainer = document.querySelector("#gameContainer");
-    gameContainer.hidden = true;
+    gameContainer.hidden = true; // Hide the main game container until the user has selected the number of cards to play with
     /*document.querySelector("#gameWinner").parentElement.hidden = true;
     document.querySelector("#roundWinner").parentElement.hidden = true;
     document.querySelector("#computerCompareCategory").parentElement.hidden = true;
@@ -192,13 +207,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const numCards = document.querySelector("#numCards");
 
     startForm.addEventListener("submit", async (e) => {
+        // Once the user has selected the number of cards to play with and submitted the form, start the game
         e.preventDefault();
-        const num = parseInt(numCards.value);
         gameContainer.hidden = false;
-        await play(num, dogs);
+        await play(parseInt(numCards.value), dogs);
         document.querySelector("#resetGameForm").addEventListener("submit", e => {
             e.preventDefault();
             location.reload();
-        });
+        }); // If the reset game button is pressed, reload the page to reset the game
     });
 });
